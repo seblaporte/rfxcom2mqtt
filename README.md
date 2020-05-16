@@ -37,7 +37,7 @@ On a modern Linux system, just a few steps are needed to get the gateway working
 The following example shows the installation under Raspbian:
 
 ```shell
-sudo apt-get install git python3 python3-pip python3-wheel bluetooth bluez libglib2.0-dev
+sudo apt-get install git python3 python3-pip
 sudo pip3 install virtualenv
 git clone https://github.com/Yvon-Indel/rfxcom-mqtt-gateway.git
 cd rfxcom-mqtt-gateway
