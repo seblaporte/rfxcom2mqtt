@@ -1,0 +1,13 @@
+[Unit]
+Description=Rfxcom MQTT gateway
+Documentation=https://github.com/zewelor/bt-mqtt-gateway
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/rfx-mqtt-gateway 
+ExecStart=/home/pi/rfx-mqtt-gateway/service.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
