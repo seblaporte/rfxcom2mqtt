@@ -2,7 +2,7 @@
 
 A  Python script which provides a Rfxcom to MQTT gateway for my own use with [Home Assistant](https://www.home-assistant.io/docs/)
 
-I use an old rfxtr433 model wich doesn't support the Somfy protocol.
+I use an old rfxtr433 model which doesn't support the Somfy protocol.
 
 ## Features
 
