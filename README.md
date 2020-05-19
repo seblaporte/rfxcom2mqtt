@@ -137,7 +137,7 @@ sudo service rfxcom-mqtt-gateway start
 ```
 To watch the service status :
 ```shell
-sudo service rfxcom-mqtt-gateway start
+sudo service rfxcom-mqtt-gateway status
 ```
 To stop the service :
 ```shell
