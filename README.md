@@ -50,7 +50,7 @@ pip3 install -r requirements.txt
 
 ## Configuration
 
-Change the file .env according to your own need:
+Create the file .env and change the information according to your own need:
 ```sh
 MQTT_PREFIX = rfxcom
 MQTT_HOMEASSISTANT = homeassistant
