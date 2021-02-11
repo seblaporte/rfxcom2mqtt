@@ -3,7 +3,24 @@
 A  Python script which provides a Rfxcom to MQTT gateway for my own use with [Home Assistant](https://www.home-assistant.io/docs/)
 
 I use an old rfxtr433 model which doesn't support the Somfy protocol.
-
+# Table of contents
+- [Features](#features)
+  * [Supported devices](#supported-devices)
+- [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+- [Installation](#installation)
+  * [Virtualenv](#virtualenv)
+- [Configuration](#configuration)
+    + [Detect new device](#detect-new-device)
+    + [Add a device to HA](#add-a-device-to-ha)
+      - [OREGON device:](#oregon-device-)
+      - [AC device (like Chacon remote control)](#ac-device--like-chacon-remote-control-)
+      - [X10 Motion Sensor](#x10-motion-sensor)
+- [Execution](#execution)
+- [Deployment](#deployment)
+- [To do](#to-do)
+- [Authors](#authors)
+- [License](#license)
 ## Features
 
 * Data publication via MQTT
