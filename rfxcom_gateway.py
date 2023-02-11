@@ -5,7 +5,7 @@ import paho.mqtt.client as mqtt
 from RFXtrx import PySerialTransport, SensorEvent, ControlEvent, StatusEvent, get_device
 from settings import *
 
-loglevel = logging.getLevelName(LOGLEVEL)
+loglevel = logging.getLevelName('INFO')
 logging.basicConfig(level=loglevel, filename="RFXlog.log")
 
 
@@ -17,26 +17,25 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe(MQTT_PREFIX + "/switch/#")
     connect_topic = MQTT_PREFIX + "/status"
     mqtt_client.publish(connect_topic,payload="connected", qos=0, retain=True)
-  
 
 def on_disconnect():
-    mqtt_client.publish(connect_topic,payload="disconnected", qos=0, retain=True)       
-                
+    mqtt_client.publish(connect_topic,payload="disconnected", qos=0, retain=True)
+
 def id_to_name(id_string):
     if id_string in KNOWNDEVICES.keys():
         return KNOWNDEVICES[id_string]
     return id_string
 
 def id_to_mqttname(id_string):
-    if id_string in KNOWNDEVICES.keys():    
+    if id_string in KNOWNDEVICES.keys():
         devicename = id_to_name(id_string)
         return name_to_mqttname(devicename)
     return id_string
 
-def name_to_mqttname(name_string):    
+def name_to_mqttname(name_string):
     name_string = RFX_DEVICE_PREFIX+"_" + name_string
     return name_string
-    
+
 def mqttname_to_id(topic):
     devicename=topic.replace(MQTT_PREFIX + "/switch/" + RFX_DEVICE_PREFIX + "_","")
     devicename=devicename.replace("/set","")
@@ -44,7 +43,7 @@ def mqttname_to_id(topic):
         idkey=[c for c,v in KNOWNDEVICES.items() if v==devicename]
         return idkey[0]
     return "not found !"
-    
+
 def isknown(id_string):
     if id_string in KNOWNDEVICES.keys():
         return True
@@ -56,34 +55,37 @@ def isunknown(id_string):
         return True
     else:
         return False
-        
+
 def as_temperature(devicetype):
     if (devicetype.find('T') != -1):
         return True
     else:
         return False
+
 def as_humidity(devicetype):
     if (devicetype.find('H') != -1):
         return True
     else:
         return False
-        
+
 def as_battery(devicetype):
     if (devicetype.find('B') != -1):
         return True
     else:
-        return False 
+        return False
+
 def is_chacon(devicetype):
     if (devicetype.find('AC') != -1):
         return True
     else:
-        return False         
+        return False
+
 def is_motion(devicetype):
     if (devicetype.find('S') != -1):
         return True
     else:
-        return False         
-        
+        return False
+
 def del_haconfig():
     for devicename,devicetype in KNOWNDEVICESTYPE.items():
         devicename=name_to_mqttname(devicename)
@@ -104,7 +106,7 @@ def del_haconfig():
                 json_payload = '{}'
                 logging.debug(mqtt_topic + ": " + json_payload)
                 mqtt_client.publish(mqtt_topic, json_payload,retain=False)
-                
+
 def init_haconfig():
     for devicename,devicetype in KNOWNDEVICESTYPE.items():
         devicename=name_to_mqttname(devicename)
@@ -168,14 +170,12 @@ def sensor_turn_on(deviceid):
     logging.debug("Device " + deviceid + " is turned ON")
     print("Device " + deviceid + " is turned ON")
 
-
 def sensor_turn_off(deviceid):
     state_topic = MQTT_PREFIX + '/binary_sensor/' + id_to_mqttname(deviceid) + '/state'
     mqtt_client.publish(state_topic,payload="OFF", qos=0, retain=True)
     logging.debug("Device " + deviceid + " is turned OFF")
     print("Device " + deviceid + " is turned OFF")
 
-    
 # The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
     topic= msg.topic
@@ -188,7 +188,7 @@ def on_message(client, userdata, msg):
         if KNOWNDEVICESTYPE[id_to_name(deviceid)] == "AC":
             if message == "ON":
                 switch_turn_on(deviceid)
-            else:               
+            else:
                 if message == "OFF":
                     switch_turn_off(deviceid)
                 else:
@@ -197,23 +197,21 @@ def on_message(client, userdata, msg):
         else:
             logging.debug("Device type of : " + deviceid + " is not currently handled (" + KNOWNDEVICESTYPE[deviceid] + ")")
             print("Device type of : " + deviceid + " is not currently handled (" + KNOWNDEVICESTYPE[deviceid] + ")")
- 
-transport = PySerialTransport(RFX_PORT, debug=RFX_DEBUG)
+
+transport = PySerialTransport(RFX_PORT)
 mqtt_client = mqtt.Client()  # Create the client
 mqtt_client.on_connect = on_connect  # Callback on when connected
 mqtt_client.on_message = on_message  # Callback when message received
 mqtt_client.on_disconnect = on_disconnect # Callback when disconnected
-mqtt_client.username_pw_set(MQTT_USER, MQTT_PASS)  # Set user and pw
+#mqtt_client.username_pw_set(MQTT_USER, MQTT_PASS)  # Set user and pw
 mqtt_client.will_set(MQTT_PREFIX + "/status", payload="disconnected", qos=0, retain=True) # Set last will and testament when disconnected
 mqtt_client.connect(MQTT_HOST, MQTT_PORT, 60)  # Connect the MQTT Client
 
 mqtt_client.loop_start()
 
-
 #del_haconfig
 init_haconfig()
 
-     
 infinitloop=True
 
 while infinitloop:
@@ -225,7 +223,7 @@ while infinitloop:
     logging.debug(event)
     if isunknown(event.device.id_string):
         logging.debug("Device not configured: " + event.device.id_string)
-        print("Device not configured: " + event.device.id_string) 
+        print("Device not configured: " + event.device.id_string)
     else:
         if not isknown(event.device.id_string):
             logging.debug("New device detected : " + event.device.id_string)
@@ -235,7 +233,7 @@ while infinitloop:
             logging.debug("New device added to unknowndevices.ini ")
             print("New device added to unknowndevices.ini ")
             majunknown()
-                
+
     if isinstance(event, SensorEvent):
         if isknown(event.device.id_string):
             devicename = id_to_name(event.device.id_string)
@@ -265,20 +263,20 @@ while infinitloop:
                 print(message)
                 if message == "ON":
                     switch_turn_on(deviceid)
-                else:               
+                else:
                     if message == "OFF":
                         switch_turn_off(deviceid)
                     else:
                         logging.debug("Device command received for " + str(deviceid) + " is not currently handled (" + message + ")")
                         print("Device command received for " + srt(deviceid) + " is not currently handled (" + message + ")")
-            
+
             if KNOWNDEVICESTYPE[id_to_name(deviceid)] == "S":
                 print(event.values)
                 message=event.values["Command"].upper()
                 print(message)
                 if message == "ON":
                     sensor_turn_on(deviceid)
-                else:               
+                else:
                     if message == "OFF":
                         sensor_turn_off(deviceid)
                     else:

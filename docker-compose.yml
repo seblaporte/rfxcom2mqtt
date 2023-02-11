@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  rxfcom2mqtt:
+    build: .
+    environment:
+      - MQTT_PREFIX=rfxcom
+      - MQTT_HOMEASSISTANT=homeassistant
+      - MQTT_HOST=192.168.1.21
+      - MQTT_PORT=1883
+      - RFX_PORT=/dev/ttyUSB0
+      - RFX_DEBUG=True
+      - RFX_DEVICE_PREFIX=rfxcom
